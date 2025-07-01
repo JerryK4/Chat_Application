@@ -52,9 +52,25 @@ int main(int argc,char *argv[])
             }
             printf("Exiting ......\n");
             exit(0);
-        }else{
+        }else if(strncmp(cmd, "ask ", 4) == 0){
+            char *question = cmd + 4;
+
+            // Ghi câu hỏi vào file tạm
+            FILE *fp = fopen("ai_input.txt", "w");
+            if(fp){
+                fprintf(fp, "%s", question);
+                fclose(fp);
+            }
+
+            // Gọi Python script xử lý AI
+            int ret = system("python3 call_gemini.py < ai_input.txt");
+            if(ret != 0){
+                printf("Error: Failed to call AI.\n");
+            }
+        }// Nếu không phải lệnh hợp lệ, hiển thị thông báo lỗi
+        else{
             printf("Invalid command.Type 'help' for a list of command\n");
+            }
         }
-    }
-    return 0;
+        return 0;
 }
